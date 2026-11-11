@@ -10,7 +10,7 @@ app = FastAPI(title="ResearchPath API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origin_regex=r"http://(localhost|127\.0\.0\.1)(:\d+)?",
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -86,6 +86,16 @@ def summarize(body: SummarizeIn):
         result["original_grade"] = reading_grade(body.text)
         result["summary_grade"] = reading_grade(result.get("summary", ""))
     return result
+@app.post("/alt-text")
+async def alt_text(file: UploadFile = File(...)):
+    if file.content_type not in ("image/png", "image/jpeg", "image/webp", "image/gif"):
+        raise HTTPException(400, "Upload a png, jpg, webp or gif image")
+    data = await file.read()
+    try:
+        return {"description": ai.describe_image(data, file.content_type)}
+    except Exception as e:
+        print("alt-text error:", e)
+        raise HTTPException(502, "The AI helper is busy. Please try again in a minute.")
 
 class QuizIn(BaseModel):
     lesson_text: str
