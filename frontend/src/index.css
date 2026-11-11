@@ -1,0 +1,196 @@
+:root {
+  --bg: #f4f7fa;
+  --ink: #14213d;
+  --accent: #0b6e75;
+  --accent-ink: #ffffff;
+  --font-size: 1rem;
+  --font: system-ui, sans-serif;
+  --line-height: 1.6;
+}
+
+:root[data-theme="high"] {
+  --bg: #000000;
+  --ink: #ffffff;
+  --accent: #ffd400;
+  --accent-ink: #000000;
+}
+
+:root[data-size="large"] {
+  --font-size: 1.3rem;
+}
+
+:root[data-font="dys"] {
+  --font: "Lexend", Verdana, sans-serif;
+  --line-height: 1.9;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+}
+
+header,
+main {
+  padding: 1rem 1.5rem;
+}
+
+button {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  font: inherit;
+  cursor: pointer;
+}
+
+button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+button[aria-pressed="true"]::before {
+  content: "✓ ";
+}
+
+button:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+[role="group"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+nav a {
+  color: var(--ink);
+  font-weight: 700;
+  padding: 0.5em 0.9em;
+  border-radius: 8px;
+  text-decoration: underline;
+}
+
+nav a[aria-current="page"] {
+  background: var(--accent);
+  color: var(--accent-ink);
+  text-decoration: none;
+}
+
+a:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+main a {
+  color: var(--ink);
+  font-weight: 700;
+}
+h1:focus {
+  outline: none;
+}
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0.5rem;
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: 0.6em 1em;
+  border-radius: 8px;
+  font-weight: 700;
+  z-index: 10;
+}
+
+.skip-link:focus {
+  left: 0.5rem;
+}
+
+main:focus {
+  outline: none;
+}
+.format-switch {
+  margin: 1rem 0 1.5rem;
+}
+
+.lesson-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.lesson-controls p {
+  margin: 0;
+}
+
+button[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.audio-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+.lesson-video {
+  display: block;
+  width: 100%;
+  max-width: 40rem;
+  margin: 1rem 0;
+}
+
+.coach-output {
+  margin-top: 1rem;
+}
+
+textarea {
+  display: block;
+  width: 100%;
+  max-width: 40rem;
+  font: inherit;
+}
+
+fieldset label {
+  display: block;
+  margin: 0.5rem 0;
+}
+
+/* Focus mode: narrow column, hide everything marked secondary */
+[data-focus="on"] main {
+  max-width: 40rem;
+  margin-inline: auto;
+}
+[data-focus="on"] .secondary {
+  display: none;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 40rem;
+  margin-bottom: 1.5rem;
+}
+
+th,
+td {
+  border: 1px solid currentColor;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+select {
+  display: block;
+  font: inherit;
+  margin-bottom: 1rem;
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ResearchPath – M2 Screens</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#1b1f2a;--mu:#4b5263;--ac:#2f4fd8;--ac2:#fff;--bd:#c9cfdd;--fs:16px;--ff:system-ui,Segoe UI,Arial,sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#12141b;--card:#1c2030;--tx:#eef0f6;--mu:#b4bbcc;--ac:#8aa2ff;--ac2:#10131c;--bd:#3a4158}}
+:root[data-mode=contrast]{--bg:#000;--card:#000;--tx:#fff;--mu:#fff;--ac:#ffe600;--ac2:#000;--bd:#fff}
+:root[data-mode=dyslexia]{--bg:#fbf5e6;--card:#fffaf0;--tx:#222;--mu:#333;--ac:#1f5f4a;--ac2:#fff;--bd:#bfb69c;--ff:"Comic Sans MS","Trebuchet MS",Verdana,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--tx);font:var(--fs)/1.6 var(--ff);letter-spacing:.01em;padding:12px;max-width:760px;margin:auto}
+:root[data-mode=dyslexia] body{line-height:1.9;letter-spacing:.05em;word-spacing:.12em}
+h1{font-size:1.3em;margin:.2em 0}h2{font-size:1.15em;margin:.2em 0 .5em}
+.bar{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+button{font:inherit;min-height:44px;min-width:44px;padding:6px 12px;border:2px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;cursor:pointer}
+button[aria-pressed=true],button[aria-selected=true],.pri{background:var(--ac);color:var(--ac2);border-color:var(--ac)}
+:focus-visible{outline:3px solid var(--ac);outline-offset:3px}
+:root[data-mode=contrast] :focus-visible{outline-color:#0ff}
+.card{background:var(--card);border:2px solid var(--bd);border-radius:14px;padding:14px;margin:10px 0}
+.row{display:flex;gap:8px;flex-wrap:wrap}.mu{color:var(--mu)}
+input,textarea{font:inherit;width:100%;padding:10px;min-height:44px;border:2px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx)}
+label{display:block;font-weight:600;margin:8px 0 4px}
+.prog{height:12px;background:var(--bd);border-radius:6px;overflow:hidden}.prog i{display:block;height:100%;background:var(--ac)}
+.note{font-size:.85em;color:var(--mu);border-left:4px solid var(--ac);padding-left:8px;margin-top:10px}
+pre.mermaid{overflow-x:auto}
+[data-focus=on] .card:not(.main){opacity:.35}
+</style></head><body>
+<h1>ResearchPath – 7 screens</h1>
+<div class="bar" role="group" aria-label="Display mode">
+<button data-m="normal" aria-pressed="true">Normal</button>
+<button data-m="contrast" aria-pressed="false">High contrast</button>
+<button data-m="dyslexia" aria-pressed="false">Dyslexia</button>
+<button id="foc" aria-pressed="false">Focus mode</button>
+<button id="big" aria-pressed="false">Text +</button></div>
+<div class="bar" role="tablist" aria-label="Screens" id="tabs"></div>
+<main id="scr" tabindex="-1"></main>
+<div class="card"><h2>User flow</h2>
+<pre class="mermaid">flowchart LR
+A[Sign up] --> B[Pick profile] --> C[Dashboard] --> D[Course page] --> E[Lesson player]
+E --> F[Workspace] --> G[Quiz] --> H[Mentor feedback] --> C</pre></div>
+<script>
+const S={
+"1 Sign-up":`<div class="card main"><h2>Welcome to ResearchPath</h2><label for="n">Name</label><input id="n" value="Asha"><label for="e">Email</label><input id="e" type="email"><h2 style="margin-top:14px">Your accessibility profile</h2>
+<div class="row"><button aria-pressed="true">Screen reader</button><button aria-pressed="false">Low vision</button><button aria-pressed="false">Deaf / captions</button><button aria-pressed="false">Dyslexia</button><button aria-pressed="false">ADHD focus</button><button aria-pressed="false">Keyboard / motor</button></div>
+<p><button class="pri">Create account</button></p></div><p class="note">Tab order: name, email, profiles, create. Profile sets theme, font, motion and captions automatically.</p>`,
+"2 Dashboard":`<div class="card main"><h2>Hi Asha – continue where you left off</h2><p>Module 2 of 7: Ask a question</p><div class="prog" role="progressbar" aria-valuenow="28" aria-valuemin="0" aria-valuemax="100" aria-label="Course progress 28 percent"><i style="width:28%"></i></div><p><button class="pri">Resume lesson</button></p></div>
+<div class="card"><h2>Tools</h2><div class="row"><button>Question Coach</button><button>Workspace</button><button>Mentor</button></div></div>`,
+"3 Course":`<div class="card main"><h2>Course path</h2><ol><li>Find a topic ✔</li><li><b>Ask a question</b> (current)</li><li>Literature review</li><li>Choose a method</li><li>Collect and analyze data</li><li>Write and cite</li><li>Present</li></ol><button class="pri">Open module 2</button></div>`,
+"4 Lesson":`<div class="card main"><h2>Ask a question</h2><div class="row" role="group" aria-label="Lesson format"><button aria-pressed="true">Text</button><button aria-pressed="false">Audio</button><button aria-pressed="false">Captioned video</button><button aria-pressed="false">Simple language</button></div>
+<p>A good research question is narrow and specific. Not "online learning" but "online learning for visually impaired students in India".</p><div class="row"><button>◀ Previous</button><button class="pri">Next ▶</button></div></div><p class="note">Switching format keeps your place in the lesson. Captions and transcript always available.</p>`,
+"5 Workspace":`<div class="card main"><h2>Question builder</h2><label for="q">Your idea</label><textarea id="q" rows="2">I want to study online learning</textarea><p><button class="pri">Get coaching</button></p>
+<div class="card"><b>Better versions</b><ol><li>How do visually impaired students in India use online learning tools?</li><li>What barriers do blind students face in online classes?</li><li>Which accessibility features help most?</li></ol></div></div>
+<div class="card"><h2>Notes · Sources</h2><div class="row"><button>Notes board</button><button>Source tracker</button><button>Cite</button></div></div>`,
+"6 Quiz":`<div class="card main"><h2>Quick quiz – question 1 of 5</h2><p>Which is a narrow research question?</p><div role="radiogroup" aria-label="Answers"><button>A. Online learning</button> <button>B. Online learning for blind students in India</button></div>
+<div class="row" style="margin-top:10px"><button>🎤 Answer by voice</button><button aria-pressed="true">No timer</button><button aria-pressed="false">Calm mode</button></div></div>`,
+"7 Mentor":`<div class="card main"><h2>Mentor feedback</h2><p><b>Draft:</b> Research question v2</p><p class="mu">Mentor: Clear scope. Add a time frame and name your method.</p><button class="pri">Share new draft</button></div>
+<div class="card"><h2>Progress</h2><div class="prog" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="Overall progress 35 percent"><i style="width:35%"></i></div></div>`,
+"8 Demo script":`<div class="card main"><h2>3-minute demo: Asha</h2><ol><li><b>0:00</b> Intro. Asha is blind and has never done research. Goal: go from a vague idea to a clear question using only keyboard and screen reader.</li><li><b>0:20</b> Sign-up. Tab through the form, pick Screen reader profile. Theme and focus settings apply automatically.</li><li><b>0:45</b> Dashboard. Progress is announced. Press Resume lesson.</li><li><b>1:05</b> Lesson. Switch Text to Audio to Simple language. Her place is kept.</li><li><b>1:30</b> Workspace. Type "I want to study online learning" and press Get coaching. Three narrower questions appear and are read out.</li><li><b>2:05</b> Quiz. Answer by voice, no timer, calm mode.</li><li><b>2:30</b> Mentor. Share the draft and read the feedback.</li><li><b>2:45</b> Switch to High contrast and Dyslexia mode to show the same screens work for every learner. Close.</li></ol></div><p class="note">Slide plan: 1 Problem, 2 Personas, 3 User flow, 4-10 the seven screens (Normal + High contrast side by side), 11 Accessibility features, 12 Thank you.</p>`};
+const R=document.documentElement,sc=document.getElementById('scr'),tb=document.getElementById('tabs');
+let cur=Object.keys(S)[0],fs=16;
+Object.keys(S).forEach(k=>{const b=document.createElement('button');b.textContent=k;b.setAttribute('role','tab');b.onclick=()=>show(k);tb.append(b)});
+function show(k){cur=k;sc.innerHTML=S[k];[...tb.children].forEach(b=>b.setAttribute('aria-selected',b.textContent==k))}
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{R.dataset.mode=b.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.setAttribute('aria-pressed',x==b))});
+foc.onclick=()=>{const on=foc.getAttribute('aria-pressed')!='true';foc.setAttribute('aria-pressed',on);document.body.dataset.focus=on?'on':'off'};
+big.onclick=()=>{fs=fs==16?20:16;R.style.setProperty('--fs',fs+'px');big.setAttribute('aria-pressed',fs==20)};
+sc.addEventListener('click',e=>{const b=e.target.closest('button[aria-pressed]');if(!b)return;const t=b.textContent.trim();if(['No timer','Calm mode'].includes(t)){b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!='true');return}[...b.parentElement.children].forEach(x=>x.setAttribute('aria-pressed',x==b));const m={'Low vision':'contrast','Dyslexia':'dyslexia','Screen reader':'normal'}[t];if(m)document.querySelector('[data-m='+m+']').click();if(t=='ADHD focus')foc.click()});
+R.dataset.mode='normal';show(cur);
+</script></body></html>
