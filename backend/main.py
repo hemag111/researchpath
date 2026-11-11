@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, UploadFile, File
+﻿from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from utils import reading_grade
@@ -34,6 +34,7 @@ class CoachIn(BaseModel):
 
 
 COACH_FALLBACK = {
+    "type": "idea",
     "scores": {"specific": 2, "answerable": 2, "relevant": 3, "doable": 3},
     "feedback": "The AI helper is busy right now, so here is a general tip: your idea is a good start, "
                 "but it needs to be narrower. Name who you study, where, and what you want to find out.",
@@ -48,15 +49,17 @@ COACH_FALLBACK = {
 
 @app.post("/coach")
 def coach(body: CoachIn):
-    system = (
-        f"You are a friendly research coach for complete beginners. Reply in {body.language}, in plain language. "
-        "Score the learner's idea from 1 to 5 on: specific, answerable, relevant, doable. "
-        "Give short, encouraging feedback (2-3 sentences) on what is too broad or unclear. "
-        "Ask ONE guiding question that helps the learner improve the idea by themselves. "
-        "Then give 3 sharper, answerable research questions. "
-        'Return JSON: {"scores": {"specific": 1, "answerable": 1, "relevant": 1, "doable": 1}, '
-        '"feedback": "...", "guiding_question": "...", "suggestions": ["...", "...", "..."]}'
-    )
+    system = f"""You are a friendly research coach for complete beginners. Reply in {body.language}, in plain language.
+
+First decide what the learner wrote.
+
+1) If it is a GENERAL QUESTION about doing research (for example: what is a literature review, how do I choose a method, how do I write a hypothesis), set "type" to "answer". Put a clear, direct, helpful answer in "feedback" (4 to 6 short sentences with one simple example). Set every score to 0. Do NOT reply with only a question.
+
+2) If it is a RESEARCH IDEA or TOPIC, set "type" to "idea". Score it from 1 to 5 on specific, answerable, relevant, doable. Give short encouraging feedback (2 to 3 sentences) on what is too broad or unclear.
+
+In both cases give 3 related research questions or follow-up questions in "suggestions", and one optional "guiding_question" to think about next.
+
+Return JSON in exactly this shape: {{"type": "answer", "scores": {{"specific": 0, "answerable": 0, "relevant": 0, "doable": 0}}, "feedback": "...", "guiding_question": "...", "suggestions": ["...", "...", "..."]}}"""
     try:
         return ai.ask_json(system, body.idea)
     except Exception as e:

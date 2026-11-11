@@ -23,17 +23,20 @@ export default function ResearchCoach() {
     }
   }
 
+  const isAnswer = result?.type === "answer";
+
   return (
     <section aria-labelledby="coach-heading">
       <h1 id="coach-heading" tabIndex="-1">Research Question Coach</h1>
+      <p>Ask a research question (like "What is a literature review?") or share a research idea.</p>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="idea">Your research idea</label>
+        <label htmlFor="idea">Your question or research idea</label>
         <textarea
           id="idea"
           rows={3}
           value={idea}
           onChange={(e) => setIdea(e.target.value)}
-          placeholder="Example: I want to research online learning"
+          placeholder="Example: What is a literature review?  or  I want to research online learning"
         />
         <label htmlFor="language">Answer language</label>
         <select id="language" value={language} onChange={(e) => setLanguage(e.target.value)}>
@@ -42,7 +45,7 @@ export default function ResearchCoach() {
           <option>Hindi</option>
         </select>
         <button type="submit" disabled={loading}>
-          {loading ? "Thinking..." : "Get feedback"}
+          {loading ? "Thinking..." : "Get help"}
         </button>
       </form>
 
@@ -51,19 +54,30 @@ export default function ResearchCoach() {
         {error && <p role="alert">{error}</p>}
         {result && (
           <div>
-            <h3>Feedback</h3>
+            <h2>{isAnswer ? "Answer" : "Feedback"}</h2>
             <p>{result.feedback}</p>
-            <h3>Scores (1 to 5)</h3>
-            <ul>
-              {Object.entries(result.scores || {}).map(([name, value]) => (
-                <li key={name}>
-                  {name}: {value}
-                </li>
-              ))}
-            </ul>
-            <h3>Think about this</h3>
-            <p>{result.guiding_question}</p>
-            <h3>Sharper questions you could ask</h3>
+
+            {!isAnswer && (
+              <>
+                <h2>Scores (1 to 5)</h2>
+                <ul>
+                  {Object.entries(result.scores || {}).map(([name, value]) => (
+                    <li key={name}>
+                      {name}: {value}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {result.guiding_question && (
+              <>
+                <h2>Think about this</h2>
+                <p>{result.guiding_question}</p>
+              </>
+            )}
+
+            <h2>{isAnswer ? "Questions to explore next" : "Sharper questions you could ask"}</h2>
             <ul>
               {(result.suggestions || []).map((s) => (
                 <li key={s}>{s}</li>
