@@ -9,6 +9,12 @@ import Workspace from './pages/Workspace'
 import Quiz from './pages/Quiz'
 import Mentor from './pages/Mentor'
 import ResearchCoach from './ResearchCoach'
+import Module1 from './pages/Module1'
+import Module3 from './pages/Module3'
+import Module4 from './pages/Module4'
+import Module5 from './pages/Module5'
+import Module6 from './pages/Module6'
+import Module7 from './pages/Module7'
 
 const STORAGE_KEY = 'researchpath-settings'
 const DEFAULTS = { contrast: false, size: false, font: false, focus: false }
@@ -21,6 +27,7 @@ const TITLES = {
   '/quiz': 'Quiz',
   '/mentor': 'Mentor',
   '/coach': 'Research Coach',
+  '/module-1': 'Module 1',
 }
 
 function loadSettings() {
@@ -89,6 +96,12 @@ function App() {
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/mentor" element={<Mentor />} />
           <Route path="/coach" element={<ResearchCoach />} />
+          <Route path="/module-1" element={<Module1 />} />
+          <Route path="/module-3" element={<Module3 />} />
+          <Route path="/module-4" element={<Module4 />} />
+          <Route path="/module-5" element={<Module5 />} />
+          <Route path="/module-6" element={<Module6 />} />
+          <Route path="/module-7" element={<Module7 />} />
         </Routes>
       </main>
     </>
