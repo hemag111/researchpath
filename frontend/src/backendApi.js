@@ -16,7 +16,7 @@ const post = (path, body) =>
 export const coach = (idea, language = "English") => post("/coach", { idea, language });
 export const summarize = (text, level = "simple", language = "English") =>
   post("/summarize", { text, level, language });
-export const makeQuiz = (lesson_text, count = 3) => post("/quiz", { lesson_text, count });
+export const makeQuiz = (lesson_text, count = 5) => post("/quiz", { lesson_text, count });
 export const checkSource = (source_text) => post("/credibility", { source_text });
 export const mentorFeedback = (user_id, draft) => post("/mentor/feedback", { user_id, draft });
 

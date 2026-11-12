@@ -1,7 +1,7 @@
 
 import ModuleLearning from '../components/ModuleLearning'
 
-const LESSONS = [
+export const LESSONS = [
   {
     title: 'Understanding research findings',
     text: `Research findings are the results obtained after collecting and analyzing information.

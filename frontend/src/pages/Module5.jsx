@@ -1,7 +1,7 @@
 
 import ModuleLearning from '../components/ModuleLearning'
 
-const LESSONS = [
+export const LESSONS = [
   {
     title: 'Understanding data collection',
     text: `Data collection is an important step in the research process.

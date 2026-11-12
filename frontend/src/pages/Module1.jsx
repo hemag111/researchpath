@@ -4,7 +4,7 @@ import { getProgress, setProgress } from '../backendApi'
 
 const USER_ID = 'demo-asha'
 
-const LESSONS = [
+export const LESSONS = [
   {
     title: 'Understanding the meaning of research',
     text: `Research is a scientific and systematic search for appropriate information on a specific topic.

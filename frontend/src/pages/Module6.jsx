@@ -1,7 +1,7 @@
 
 import ModuleLearning from '../components/ModuleLearning'
 
-const LESSONS = [
+export const LESSONS = [
   {
     title: 'Understanding research reports',
     text: `After completing the research, the researcher prepares a report or thesis describing the work carried out.

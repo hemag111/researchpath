@@ -4,7 +4,7 @@ import { getProgress, setProgress } from '../backendApi'
 
 const USER_ID = 'demo-asha'
 
-const LESSONS = [
+export const LESSONS = [
   {
     title: 'Understanding a literature review',
     text: `A literature review is an important part of the research process.

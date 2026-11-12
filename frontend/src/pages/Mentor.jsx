@@ -1,5 +1,7 @@
+
 import { useState, useEffect } from 'react'
 import { getLearners, sendMentorMessage } from '../api'
+import '../App.css'
 
 function Mentor() {
   const [learners, setLearners] = useState([])
@@ -24,12 +26,22 @@ function Mentor() {
   }, [])
 
   async function handleSend() {
+    if (!learnerId || !message.trim()) return
+
     setSending(true)
     setStatus('')
     setSendError('')
+
     try {
-      await sendMentorMessage({ learnerId, message })
-      const learner = learners.find((l) => String(l.id) === learnerId)
+      await sendMentorMessage({
+        learnerId,
+        message: message.trim(),
+      })
+
+      const learner = learners.find(
+        (l) => String(l.id) === learnerId
+      )
+
       setStatus(`Message sent to ${learner ? learner.name : 'learner'}.`)
       setMessage('')
     } catch (err) {
@@ -39,65 +51,216 @@ function Mentor() {
     }
   }
 
+  const learnersNeedingHelp = learners.filter(
+    (learner) => learner.needsHelp
+  ).length
+
   return (
-    <>
-      <h1 tabIndex="-1">Mentor</h1>
+    <main className="mentor-page">
+      <section className="mentor-hero">
+        <div>
+          <span className="mentor-eyebrow">RESEARCHPATH • MENTOR SPACE</span>
+          <h1>Mentor Dashboard</h1>
+          <p>
+            Support learners, monitor their research progress,
+            and guide them throughout their learning journey.
+          </p>
+        </div>
 
-      <h2>Learners</h2>
-      {loading && <p role="status">Loading learners...</p>}
-      {loadError && <p role="alert">{loadError}</p>}
-      {!loading && !loadError && (
-        <table>
-          <caption>Learner progress</caption>
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Module</th>
-              <th scope="col">Progress</th>
-              <th scope="col">Needs help</th>
-            </tr>
-          </thead>
-          <tbody>
-            {learners.map((l) => (
-              <tr key={l.id}>
-                <th scope="row">{l.name}</th>
-                <td>{l.module}</td>
-                <td>{l.progress}%</td>
-                <td>{l.needsHelp ? 'Yes' : 'No'}</td>
-              </tr>
+        <div className="mentor-hero-icon">👩‍🏫</div>
+      </section>
+
+      <section className="mentor-stats">
+        <div className="mentor-stat-card">
+          <span className="mentor-stat-icon">👥</span>
+          <div>
+            <strong>{loading ? '—' : learners.length}</strong>
+            <span>Total Learners</span>
+          </div>
+        </div>
+
+        <div className="mentor-stat-card">
+          <span className="mentor-stat-icon">🙋</span>
+          <div>
+            <strong>{loading ? '—' : learnersNeedingHelp}</strong>
+            <span>Need Assistance</span>
+          </div>
+        </div>
+
+        <div className="mentor-stat-card">
+          <span className="mentor-stat-icon">📈</span>
+          <div>
+            <strong>
+              {loading || learners.length === 0
+                ? '—'
+                : `${Math.round(
+                    learners.reduce(
+                      (sum, learner) => sum + (Number(learner.progress) || 0),
+                      0
+                    ) / learners.length
+                  )}%`}
+            </strong>
+            <span>Average Progress</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="mentor-learners-card">
+        <div className="mentor-section-heading">
+          <div>
+            <h2>Learner Overview</h2>
+            <p>Track learning progress and identify learners who need support.</p>
+          </div>
+          <span className="mentor-section-icon">📋</span>
+        </div>
+
+        {loading && (
+          <p className="mentor-info-message" role="status">
+            Loading learners...
+          </p>
+        )}
+
+        {loadError && (
+          <p className="mentor-error-message" role="alert">
+            {loadError}
+          </p>
+        )}
+
+        {!loading && !loadError && learners.length === 0 && (
+          <p className="mentor-info-message">
+            No learners are available at the moment.
+          </p>
+        )}
+
+        {!loading && !loadError && learners.length > 0 && (
+          <div className="mentor-table-wrapper">
+            <table className="mentor-table">
+              <caption>Learner progress overview</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Learner</th>
+                  <th scope="col">Current Module</th>
+                  <th scope="col">Progress</th>
+                  <th scope="col">Support Status</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {learners.map((learner) => (
+                  <tr key={learner.id}>
+                    <th scope="row">{learner.name}</th>
+
+                    <td>{learner.module}</td>
+
+                    <td>
+                      <div className="mentor-progress-cell">
+                        <div className="mentor-progress-track">
+                          <div
+                            className="mentor-progress-fill"
+                            style={{
+                              width: `${Math.min(
+                                100,
+                                Math.max(0, Number(learner.progress) || 0)
+                              )}%`,
+                            }}
+                          />
+                        </div>
+                        <span>{learner.progress}%</span>
+                      </div>
+                    </td>
+
+                    <td>
+                      <span
+                        className={`mentor-status ${
+                          learner.needsHelp
+                            ? 'mentor-status-help'
+                            : 'mentor-status-good'
+                        }`}
+                      >
+                        {learner.needsHelp
+                          ? 'Needs Help'
+                          : 'On Track'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+
+      <section className="mentor-feedback-card">
+        <div className="mentor-section-heading">
+          <div>
+            <h2>Send Personalised Feedback</h2>
+            <p>
+              Share suggestions, encouragement, and guidance with learners.
+            </p>
+          </div>
+          <span className="mentor-section-icon">💬</span>
+        </div>
+
+        <div className="mentor-form">
+          <label htmlFor="mentor-learner">Select Learner</label>
+
+          <select
+            id="mentor-learner"
+            value={learnerId}
+            onChange={(e) => setLearnerId(e.target.value)}
+            disabled={loading || !!loadError || learners.length === 0 || sending}
+          >
+            <option value="">Choose a learner</option>
+            {learners.map((learner) => (
+              <option key={learner.id} value={learner.id}>
+                {learner.name}
+              </option>
             ))}
-          </tbody>
-        </table>
-      )}
+          </select>
 
-      <h2>Send feedback</h2>
-      <label htmlFor="learner">Learner</label>
-      <select id="learner" value={learnerId} onChange={(e) => setLearnerId(e.target.value)}>
-        <option value="">Choose a learner</option>
-        {learners.map((l) => (
-          <option key={l.id} value={l.id}>
-            {l.name}
-          </option>
-        ))}
-      </select>
+          <label htmlFor="mentor-message">Your Feedback</label>
 
-      <label htmlFor="message">Message</label>
-      <textarea
-        id="message"
-        rows="4"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-      />
+          <textarea
+            id="mentor-message"
+            rows="5"
+            placeholder="Write your feedback or guidance here..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            disabled={sending}
+          />
 
-      <button type="button" onClick={handleSend} disabled={sending || !learnerId}>
-        {sending ? 'Sending...' : 'Send message'}
-      </button>
+          <div className="mentor-form-footer">
+            <span>{message.length} characters</span>
 
-      <div aria-live="polite">
-        {status && <p>{status}</p>}
-        {sendError && <p role="alert">{sendError}</p>}
-      </div>
-    </>
+            <button
+              type="button"
+              className="mentor-send-button"
+              onClick={handleSend}
+              disabled={
+                sending ||
+                !learnerId ||
+                !message.trim() ||
+                loading ||
+                !!loadError
+              }
+            >
+              {sending ? 'Sending...' : 'Send Feedback →'}
+            </button>
+          </div>
+
+          <div aria-live="polite">
+            {status && (
+              <p className="mentor-success-message">{status}</p>
+            )}
+            {sendError && (
+              <p className="mentor-error-message" role="alert">
+                {sendError}
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
+    </main>
   )
 }
 

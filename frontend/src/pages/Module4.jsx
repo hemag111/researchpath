@@ -1,7 +1,7 @@
 
 import ModuleLearning from '../components/ModuleLearning'
 
-const LESSONS = [
+export const LESSONS = [
   {
     title: 'Understanding research design',
     text: `Research design refers to the conceptual structure within which research is conducted.
